@@ -98,3 +98,47 @@
     setup();
   }
 })();
+
+(() => {
+  const base = "https://semyon-git-hub.github.io/pocketfinanceai/";
+  const pages = {
+    "use-cases": "use-cases.html",
+    "updates": "updates.html",
+    "faq": "faq.html",
+    "ru": "ru.html",
+    "ru-cases": "ru-cases.html",
+    "ru-updates": "ru-updates.html",
+    "ru-faq": "ru-faq.html"
+  };
+
+  document.querySelectorAll("a[href]").forEach(link => {
+    let url;
+
+    try {
+      url = new URL(link.getAttribute("href"), location.href);
+    } catch {
+      return;
+    }
+
+    if (!url.hostname.endsWith("wixsite.com")) return;
+    if (!url.hostname.includes("pavelevsemyon")) return;
+    if (!url.pathname.includes("pocketfinanceai")) return;
+
+    const path = url.pathname
+      .replace("/pocketfinanceai", "")
+      .replace(/^\/+|\/+$/g, "")
+      .replace(/\.html$/i, "");
+
+    const key = path.toLowerCase();
+
+    if (pages[key]) {
+      link.href = base + pages[key];
+    } else if (!key) {
+      link.href = base + (
+        location.pathname.endsWith("ru.html")
+          ? "ru.html"
+          : "index.html"
+      );
+    }
+  });
+})();
