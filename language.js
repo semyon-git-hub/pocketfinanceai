@@ -33,24 +33,25 @@
   function setup() {
     document.querySelectorAll("a[href]").forEach(link => {
       const href = link.getAttribute("href") || "";
-      if (href.includes("pavelevsemyon.wixsite.com/pocketfinanceai")) {
-        const url = new URL(href, location.href);
-        const path = url.pathname.replace(
-          "/pocketfinanceai/",
-          ""
-        ).replace(/^\/+/, "");
+      const text = link.textContent.trim().toLowerCase();
 
-        const known = {
-          "": pages[lang].home,
-          "home": pages[lang].home,
-          "use-cases": pages[lang].cases,
-          "updates": pages[lang].updates,
-          "faq": pages[lang].faq,
-          "ru": pages.ru.home,
-          "ru-cases": pages.ru.cases,
-          "ru-updates": pages.ru.updates,
-          "ru-faq": pages.ru.faq
-        };
+      if (
+        href.includes("pavelevsemyon.wixsite.com/pocketfinanceai") ||
+        href.includes("wixsite.com/pocketfinanceai")
+      ) {
+        let target = "home";
+
+        if (text.includes("update") || text.includes("обновлен")) {
+          target = "updates";
+        } else if (text.includes("case") || text.includes("кейс")) {
+          target = "cases";
+        } else if (text.includes("faq") || text.includes("вопрос")) {
+          target = "faq";
+        }
+
+        link.href = base + pages[lang][target];
+      }
+    });
 
         const slug = path.replace(/\.html$/, "").replace(/\/$/, "");
         link.href = base + (known[slug] || pages[lang].home);
