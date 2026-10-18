@@ -3,6 +3,8 @@
   "use strict";
 
   const base = "https://semyon-git-hub.github.io/pocketfinanceai/";
+  const oldSite = "https://pavelevsemyon.wixsite.com/pocketfinanceai";
+
   const pages = {
     en: {
       home: "index.html",
@@ -18,18 +20,10 @@
     }
   };
 
-  const labels = {
-    home: ["home", "дом", "главная", "главная страница"],
-    cases: ["use cases", "кейсы"],
-    updates: ["updates", "обновления"],
-    faq: ["faq", "чаво"]
-  };
-
-  const storageKey = "pocketfinance-language";
+  const key = "pocketfinance-language";
   const file = location.pathname.split("/").pop() || "index.html";
   const isRu = file.startsWith("ru");
-  let lang = localStorage.getItem(storageKey) || (isRu ? "ru" : "en");
-
+  let lang = localStorage.getItem(key) || (isRu ? "ru" : "en");
   if (lang !== "ru" && lang !== "en") lang = isRu ? "ru" : "en";
 
   const pageKey = Object.keys(pages.en).find(
@@ -37,14 +31,29 @@
   ) || "home";
 
   function setup() {
-    document.querySelectorAll("a").forEach(link => {
-      const text = link.textContent.trim().toLowerCase();
+    document.querySelectorAll("a[href]").forEach(link => {
+      const href = link.getAttribute("href") || "";
+      if (href.includes("pavelevsemyon.wixsite.com/pocketfinanceai")) {
+        const url = new URL(href, location.href);
+        const path = url.pathname.replace(
+          "/pocketfinanceai/",
+          ""
+        ).replace(/^\/+/, "");
 
-      for (const [k, names] of Object.entries(labels)) {
-        if (names.includes(text)) {
-          link.href = base + pages[lang][k];
-          break;
-        }
+        const known = {
+          "": pages[lang].home,
+          "home": pages[lang].home,
+          "use-cases": pages[lang].cases,
+          "updates": pages[lang].updates,
+          "faq": pages[lang].faq,
+          "ru": pages.ru.home,
+          "ru-cases": pages.ru.cases,
+          "ru-updates": pages.ru.updates,
+          "ru-faq": pages.ru.faq
+        };
+
+        const slug = path.replace(/\.html$/, "").replace(/\/$/, "");
+        link.href = base + (known[slug] || pages[lang].home);
       }
     });
 
@@ -71,10 +80,10 @@
           ? "background:#e8edff;color:#243f9b;"
           : "background:#fff;color:#444;");
 
-      btn.addEventListener("click", function () {
-        localStorage.setItem(storageKey, code);
+      btn.onclick = () => {
+        localStorage.setItem(key, code);
         location.href = base + pages[code][pageKey];
-      });
+      };
 
       box.appendChild(btn);
     });
