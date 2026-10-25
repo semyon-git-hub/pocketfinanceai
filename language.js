@@ -62,10 +62,10 @@ function getTarget(path, text) {
     .replace(/\.html$/i, "")
     .toLowerCase();
 
-  if (["use-cases", "use-cases-1", "cases", "ru-cases"].includes(slug)) return "cases";
-  if (["updates", "updates-1", "ru-updates"].includes(slug)) return "updates";
-  if (["faq", "faq-1", "ru-faq"].includes(slug)) return "faq";
-  if (["", "pocketfinanceai", "home", "home-1", "index", "ru"].includes(slug)) return "home";
+  if (["use-cases", "ru-cases.html", "cases", "ru-cases"].includes(slug)) return "cases";
+  if (["updates", "ru-updates.html", "ru-updates"].includes(slug)) return "updates";
+  if (["faq", "ru-faq.html", "ru-faq"].includes(slug)) return "faq";
+  if (["", "pocketfinanceai", "home", "ru.html", "index", "ru"].includes(slug)) return "home";
 
   return null;
 }
